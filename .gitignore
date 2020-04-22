@@ -1,0 +1,8 @@
+# No compilar carpetas #
+########################
+node_modules
+src/scss
+
+# Ignorar sigtes archivos #
+###########################
+
