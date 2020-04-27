@@ -1,17 +1,3 @@
-//Funcion para arreglar footer y margen
-function footerMargen() {
-    //Por primera vez
-    let footerHeight = $('footer').height();
-
-    $('body').css("margin-bottom", `${footerHeight}px`);
-
-    //Adaptar footer
-    $(window).resize(function () {
-        $('body').css("margin-bottom", `${footerHeight}px`);
-    });
-}
-
-
 //Si la ventana carga
 $(document).ready(function () {
     //Agrega el efecto change scroll
@@ -23,7 +9,21 @@ $(document).ready(function () {
         }
     });
 
+    //Funcion Ajustar margen del footer
+    function ajustarMargen() {
+        //Por primera vez
+        //Variable de alto de footer
+        let footerHeight = $('footer').height();
+        let margT = $('#opciones').css('margin-top');
+        //Margen AJustado
+        let sizeAjust = (footerHeight + parseInt(margT.replace('px', '')));
+        $('body').css("margin-bottom", `${sizeAjust}px`);
+    }
 
-    footerMargen();
+
+    ajustarMargen();
+
+    //Adaptar footer
+    $(window).resize(ajustarMargen);
 
 });
