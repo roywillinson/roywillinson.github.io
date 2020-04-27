@@ -4,63 +4,66 @@ const {
     watch,
     parallel
 } = require('gulp');
+
 const browserSync = require('browser-sync');
+
 const sass = require('gulp-sass');
 
+const autoprefixer = require('gulp-autoprefixer');
+
+
+//Convertir sass a css
 function css() {
     return src([
-            'node_modules/bootstrap/scss/bootstrap.scss',
-            'src/scss/*.scss'
+            './node_modules/bootstrap/scss/bootstrap.scss',
+            './src/scss/*.scss'
         ])
-
         .pipe(sass({
-            outputStyle: 'compressed'
+            outputStyle: 'compressed',
         }))
-        .pipe(dest('src/css'))
+        .pipe(autoprefixer())
+        .pipe(dest('./src/css'))
         .pipe(browserSync.stream());
 }
 
+//Importar js de Boostrap package
 function js() {
 
     return src([
-            'node_modules/bootstrap/dist/js/bootstrap.min.js',
-            'node_modules/jquery/dist/jquery.slim.min.js',
-            'node_modules/popper.js/dist/umd/popper.min.js'
+            './node_modules/bootstrap/dist/js/bootstrap.min.js',
+            './node_modules/jquery/dist/jquery.slim.min.js',
+            './node_modules/popper.js/dist/umd/popper.min.js'
         ])
-        .pipe(dest('src/js'))
+        .pipe(dest('./src/js'))
         .pipe(browserSync.stream());
 }
 
+//Iniciar servidor
 function serve() {
     browserSync.init({
         server: './src'
     });
+
+    //Observar cambios de archivos scss, html, js
     watch([
-        'node_modules/bootstrap/scss/bootstrap.scss',
-        'src/scss/*.scss'
-    ], css());
+        './node_modules/bootstrap/scss/bootstrap.scss',
+        './src/scss/**/*.scss'
+    ], css);
 
-    watch('src/*.html').on('change', browserSync.reload);
-    watch('src/scss/*.scss').on('change', function (path, stats) {
-        css();
-        console.log(`File ${path} was changed`);
-
-    });
+    watch('./src/*.html').on('change', browserSync.reload);
+    watch('./src/js/**/*.js').on('change', browserSync.reload);
 }
 
+//Importar fontawesome.min.css a css
 function fontawesome() {
-    return src('node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css')
-        .pipe(dest('src/css'));
+    return src('./node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css')
+        .pipe(dest('./src/css/'));
 }
 
+//Traer las fuentes para que fontawesome funcione bien
 function fonts() {
-    return src('node_modules/@fortawesome/fontawesome-free/fonts/*')
-        .pipe(dest('src/fonts'));
+    return src('./node_modules/@fortawesome/fontawesome-free/fonts/*')
+        .pipe(dest('./src/fonts/'));
 }
 
-exports.js = js;
-exports.fontawesome = fontawesome;
-exports.fonts = fonts;
-exports.serve = serve;
-exports.css = css;
-exports.default = parallel(css, js, serve, fontawesome, fonts);
+exports.default = serve;
